@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Success message containers -->
+    <div id="videoSuccessMessage" class="hidden mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+        {{ t('videos_success') }}
+    </div>
+    
+    <div id="rulesSuccessMessage" class="hidden mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+        {{ t('rules_success') }}
+    </div>
+
+    <!-- Video upload section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold mb-4">Upload Video and Ingest Metadata</h2>
+        <form id="uploadForm" action="{{ url_for('upload_videos') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <input type="file" 
+                       name="videos" 
+                       id="videos" 
+                       multiple 
+                       accept="image/png, image/jpeg, image/jpg"
+                       class="block w-full text-gray-700 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
+                <p class="mt-1 text-sm text-gray-500">{{ t('no_files') }}</p>
+            </div>
+            
+            <!-- Progress bar (hidden by default) -->
+            <div id="progressContainer" class="hidden mb-4">
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progressBar" 
+                         class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+                         style="width: 0%">
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                    <span id="progressText">0%</span> uploaded...
+                </div>
+            </div>
+
+            <button type="submit" id="uploadButton"
+                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 flex items-center justify-center space-x-2">
+                <span>{{ t('upload_video') }}</span>
+                <div class="spinner hidden"></div>
+            </button>
+        </form>
+    </div>
+
+    <!-- Rules upload section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold mb-4">{{ t('upload_rules_title') }}</h2>
+        <form id="rulesForm" action="{{ url_for('upload_rules') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2" for="rules">{{ t('select_rules_file') }}</label>
+                <input type="file" name="rules" id="rules" accept=".txt,.pdf,.doc,.docx"
+                    class="w-full px-3 py-2 border rounded-lg">
+            </div>
+
+            <!-- Progress bar for rules upload (hidden by default) -->
+            <div id="rulesProgressContainer" class="hidden mb-4">
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="rulesProgressBar" 
+                         class="bg-green-600 h-2.5 rounded-full transition-all duration-300" 
+                         style="width: 0%">
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                    <span id="rulesProgressText">0%</span> uploaded...
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">{{ t('additional_instructions') }}</label>
+                <div class="border rounded-lg bg-gray-50 p-4">
+                    <div id="chatMessages" class="space-y-4 mb-4 max-h-60 overflow-y-auto">
+                        <!-- Messages will appear here -->
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" 
+                               id="messageInput" 
+                               placeholder="{{ t('type_instructions') }}" 
+                               class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                        <button type="button" 
+                                id="sendMessage"
+                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
+                            <span>{{ t('send') }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="rulesUploadButton"
+                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 flex items-center justify-center space-x-2">
+                <span>{{ t('upload_rules') }}</span>
+                <div class="spinner hidden"></div>
+            </button>
+        </form>
+    </div>
+
+    <!-- Generate Manual Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold mb-4">{{ t('generate_manual') }}</h2>
+        <button id="startProcessingButton"
+            class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 flex items-center justify-center space-x-2 w-full">
+            <span>{{ t('start_processing') }}</span>
+            <div class="spinner hidden"></div>
+        </button>
+    </div>
+
+    <!-- OCR Validation Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold mb-4">OCR Validation Results</h2>
+        <div id="ocrResults" class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto">
+            <pre class="text-sm text-gray-700 whitespace-pre-wrap"></pre>
+        </div>
+    </div>
+
+    <!-- Download Manual Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold mb-4">{{ t('download_manual') }}</h2>
+        <button id="downloadManualButton"
+            class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 flex items-center justify-center space-x-2 w-full">
+            <span>Download Manual</span>
+            <div class="spinner hidden"></div>
+        </button>
+    </div>
+</div>
+
+<script>
+// Helper function to show success message and auto-hide it
+function showSuccessMessage(elementId) {
+    const element = document.getElementById(elementId);
+    element.classList.remove('hidden');
+    setTimeout(() => {
+        element.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        setTimeout(() => {
+            element.classList.add('hidden');
+            element.classList.remove('opacity-0', 'transition-opacity', 'duration-500');
+        }, 500);
+    }, 3000); // Message will show for 3 seconds
+}
+
+// Video upload handling
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const files = document.getElementById('videos').files;
+    if (files.length === 0) {
+        alert('Please select at least one file');
+        return;
+    }
+    
+    const formData = new FormData(this);
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const uploadButton = document.getElementById('uploadButton');
+    
+    progressContainer.classList.remove('hidden');
+    uploadButton.disabled = true;
+    uploadButton.classList.add('opacity-90');
+    uploadButton.querySelector('.spinner').classList.remove('hidden');
+    
+    fetch("{{ url_for('upload_videos') }}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+        return response.text();
+    })
+    .then(data => {
+        showSuccessMessage('videoSuccessMessage');
+        this.reset();
+    })
+    .catch(error => {
+        console.error('Error uploading files:', error);
+        alert('Upload failed: ' + error.message);
+    })
+    .finally(() => {
+        progressContainer.classList.add('hidden');
+        uploadButton.disabled = false;
+        uploadButton.classList.remove('opacity-90');
+        uploadButton.querySelector('.spinner').classList.add('hidden');
+    });
+});
+
+// Rules upload handling
+document.getElementById('rulesForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const progressContainer = document.getElementById('rulesProgressContainer');
+    const progressBar = document.getElementById('rulesProgressBar');
+    const progressText = document.getElementById('rulesProgressText');
+    const uploadButton = document.getElementById('rulesUploadButton');
+    
+    // Show progress bar
+    progressContainer.classList.remove('hidden');
+    uploadButton.disabled = true;
+    uploadButton.classList.add('opacity-90');
+    uploadButton.querySelector('.spinner').classList.remove('hidden');
+    uploadButton.querySelector('.spinner').classList.add('ai-pulse');
+    
+    let progress = 0;
+    const totalTime = 3000; // 3 seconds
+    const interval = 50; // Update every 50ms for smoother animation
+    const steps = totalTime / interval;
+    const increment = 100 / steps;
+    
+    const updateProgress = setInterval(() => {
+        progress += increment;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(updateProgress);
+            
+            // Submit the form after the progress is complete
+            const formData = new FormData(this);
+            fetch("{{ url_for('upload_rules') }}", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                showSuccessMessage('rulesSuccessMessage');
+                progressContainer.classList.add('hidden');
+                uploadButton.disabled = false;
+                uploadButton.classList.remove('opacity-90');
+                uploadButton.querySelector('.spinner').classList.add('hidden');
+                uploadButton.querySelector('.spinner').classList.remove('ai-pulse');
+                this.reset();
+            })
+            .catch(error => {
+                console.error('Error uploading rules:', error);
+                uploadButton.disabled = false;
+                uploadButton.classList.remove('opacity-90');
+                uploadButton.querySelector('.spinner').classList.add('hidden');
+                uploadButton.querySelector('.spinner').classList.remove('ai-pulse');
+            });
+        }
+        
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${Math.round(progress)}%`;
+    }, interval);
+});
+
+// Start Processing handling
+document.getElementById('startProcessingButton').addEventListener('click', function(e) {
+    const button = this;
+    const spinner = button.querySelector('.spinner');
+    const ocrResults = document.querySelector('#ocrResults pre');
+    const word = prompt('Enter the word to highlight:');
+    
+    if (!word) {
+        return;
+    }
+    
+    button.disabled = true;
+    button.classList.add('opacity-90');
+    spinner.classList.remove('hidden');
+    spinner.classList.add('ai-pulse');
+    ocrResults.textContent = 'Processing...';
+    
+    // Add timestamp to request
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    
+    fetch("{{ url_for('process_image') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            word: word,
+            timestamp: timestamp 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            // Display processed image filename and OCR results
+            fetch('/ocr_results')
+                .then(response => response.text())
+                .then(text => {
+                    ocrResults.textContent = `Processed File: ${data.filename}\n\nOCR Results:\n${text}`;
+                });
+        } else {
+            alert('Processing failed: ' + data.message);
+            ocrResults.textContent = 'OCR processing failed';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Processing failed');
+        ocrResults.textContent = 'Error occurred during OCR processing';
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.classList.remove('opacity-90');
+        spinner.classList.add('hidden');
+        spinner.classList.remove('ai-pulse');
+    });
+});
+
+// Download Manual handling
+document.getElementById('downloadManualButton').addEventListener('click', function(e) {
+    const button = this;
+    const spinner = button.querySelector('.spinner');
+    
+    button.disabled = true;
+    button.classList.add('opacity-90');
+    spinner.classList.remove('hidden');
+    spinner.classList.add('ai-pulse');
+    
+    // Simulate download (replace with actual download logic)
+    setTimeout(() => {
+        button.disabled = false;
+        button.classList.remove('opacity-90');
+        spinner.classList.add('hidden');
+        spinner.classList.remove('ai-pulse');
+    }, 2000); // 2 seconds simulation
+});
+
+// Chat functionality
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendMessage');
+const chatMessages = document.getElementById('chatMessages');
+
+function addMessage(text, isUser = true) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+    
+    const messageBubble = document.createElement('div');
+    messageBubble.className = `max-w-[75%] rounded-lg px-4 py-2 ${
+        isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+    }`;
+    messageBubble.textContent = text;
+    
+    messageDiv.appendChild(messageBubble);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+sendButton.addEventListener('click', () => {
+    const message = messageInput.value.trim();
+    if (message) {
+        addMessage(message, true);
+        messageInput.value = '';
+        
+        // Simulate AI response (replace with actual backend call)
+        setTimeout(() => {
+            addMessage('{{ t("ai_response") }}', false);
+        }, 1000);
+    }
+});
+
+messageInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendButton.click();
+    }
+});
+</script>
+{% endblock %}

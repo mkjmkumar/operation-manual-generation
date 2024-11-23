@@ -1,0 +1,579 @@
+OCR Detection Results:
+====================
+
+Text: Resources
+Confidence: 95%
+Position: x=101, y=58
+--------------------
+Text: EC2
+Confidence: 91%
+Position: x=587, y=60
+--------------------
+Text: Global
+Confidence: 96%
+Position: x=616, y=60
+--------------------
+Text: view
+Confidence: 96%
+Position: x=664, y=63
+--------------------
+Text: [4
+Confidence: 70%
+Position: x=704, y=58
+--------------------
+Text: You
+Confidence: 96%
+Position: x=96, y=116
+--------------------
+Text: are
+Confidence: 96%
+Position: x=123, y=119
+--------------------
+Text: using
+Confidence: 96%
+Position: x=147, y=119
+--------------------
+Text: the
+Confidence: 96%
+Position: x=184, y=116
+--------------------
+Text: following
+Confidence: 94%
+Position: x=209, y=116
+--------------------
+Text: Amazon
+Confidence: 93%
+Position: x=272, y=116
+--------------------
+Text: EC2
+Confidence: 92%
+Position: x=329, y=116
+--------------------
+Text: resources
+Confidence: 96%
+Position: x=357, y=119
+--------------------
+Text: in
+Confidence: 96%
+Position: x=420, y=119
+--------------------
+Text: the
+Confidence: 96%
+Position: x=435, y=116
+--------------------
+Text: US
+Confidence: 96%
+Position: x=460, y=116
+--------------------
+Text: East
+Confidence: 96%
+Position: x=481, y=107
+--------------------
+Text: (Ohio)
+Confidence: 96%
+Position: x=512, y=115
+--------------------
+Text: Region:
+Confidence: 91%
+Position: x=555, y=116
+--------------------
+Text: Instances
+Confidence: 96%
+Position: x=105, y=161
+--------------------
+Text: (running)
+Confidence: 96%
+Position: x=168, y=161
+--------------------
+Text: 0
+Confidence: 52%
+Position: x=330, y=161
+--------------------
+Text: Dedicated
+Confidence: 89%
+Position: x=364, y=161
+--------------------
+Text: Hosts
+Confidence: 96%
+Position: x=432, y=161
+--------------------
+Text: Instances
+Confidence: 93%
+Position: x=105, y=205
+--------------------
+Text: 0
+Confidence: 58%
+Position: x=330, y=205
+--------------------
+Text: Key
+Confidence: 91%
+Position: x=364, y=205
+--------------------
+Text: pairs
+Confidence: 93%
+Position: x=391, y=208
+--------------------
+Text: Placement
+Confidence: 96%
+Position: x=105, y=240
+--------------------
+Text: groups
+Confidence: 83%
+Position: x=175, y=252
+--------------------
+Text: 0
+Confidence: 59%
+Position: x=330, y=249
+--------------------
+Text: Security
+Confidence: 82%
+Position: x=364, y=249
+--------------------
+Text: groups
+Confidence: 95%
+Position: x=419, y=252
+--------------------
+Text: Volumes
+Confidence: 96%
+Position: x=105, y=293
+--------------------
+Text: 0
+Confidence: 54%
+Position: x=330, y=293
+--------------------
+Text: 0
+Confidence: 55%
+Position: x=589, y=161
+--------------------
+Text: Elastic
+Confidence: 91%
+Position: x=624, y=161
+--------------------
+Text: IPs
+Confidence: 87%
+Position: x=668, y=161
+--------------------
+Text: 0
+Confidence: 53%
+Position: x=589, y=205
+--------------------
+Text: Load
+Confidence: 77%
+Position: x=624, y=205
+--------------------
+Text: balancers
+Confidence: 91%
+Position: x=658, y=205
+--------------------
+Text: 1
+Confidence: 66%
+Position: x=590, y=249
+--------------------
+Text: Snapshots
+Confidence: 90%
+Position: x=623, y=249
+--------------------
+Text: ‘AWS
+Confidence: 61%
+Position: x=140, y=378
+--------------------
+Text: Launch
+Confidence: 95%
+Position: x=174, y=378
+--------------------
+Text: Wizard
+Confidence: 94%
+Position: x=223, y=378
+--------------------
+Text: for
+Confidence: 94%
+Position: x=270, y=377
+--------------------
+Text: SQL
+Confidence: 96%
+Position: x=297, y=378
+--------------------
+Text: Server.
+Confidence: 94%
+Position: x=323, y=378
+--------------------
+Text: Learn
+Confidence: 94%
+Position: x=370, y=379
+--------------------
+Text: more
+Confidence: 96%
+Position: x=409, y=381
+--------------------
+Text: @
+Confidence: 64%
+Position: x=112, y=347
+--------------------
+Text: Easily
+Confidence: 93%
+Position: x=133, y=347
+--------------------
+Text: size,
+Confidence: 93%
+Position: x=180, y=359
+--------------------
+Text: configure,
+Confidence: 96%
+Position: x=211, y=356
+--------------------
+Text: and
+Confidence: 96%
+Position: x=278, y=356
+--------------------
+Text: deploy
+Confidence: 95%
+Position: x=306, y=356
+--------------------
+Text: Microsoft
+Confidence: 95%
+Position: x=353, y=356
+--------------------
+Text: SQL
+Confidence: 95%
+Position: x=416, y=356
+--------------------
+Text: Server
+Confidence: 96%
+Position: x=446, y=356
+--------------------
+Text: Always
+Confidence: 96%
+Position: x=490, y=356
+--------------------
+Text: On
+Confidence: 96%
+Position: x=538, y=356
+--------------------
+Text: availability
+Confidence: 96%
+Position: x=561, y=356
+--------------------
+Text: groups
+Confidence: 96%
+Position: x=633, y=359
+--------------------
+Text: on
+Confidence: 96%
+Position: x=681, y=359
+--------------------
+Text: AWS
+Confidence: 96%
+Position: x=700, y=356
+--------------------
+Text: using
+Confidence: 96%
+Position: x=734, y=359
+--------------------
+Text: the
+Confidence: 96%
+Position: x=771, y=356
+--------------------
+Text: Account
+Confidence: 96%
+Position: x=921, y=58
+--------------------
+Text: attributes
+Confidence: 96%
+Position: x=994, y=57
+--------------------
+Text: Supported
+Confidence: 73%
+Position: x=921, y=120
+--------------------
+Text: platforms
+Confidence: 96%
+Position: x=993, y=120
+--------------------
+Text: [4
+Confidence: 57%
+Position: x=1058, y=118
+--------------------
+Text: *
+Confidence: 34%
+Position: x=924, y=150
+--------------------
+Text: vec
+Confidence: 64%
+Position: x=941, y=147
+--------------------
+Text: Default
+Confidence: 95%
+Position: x=922, y=176
+--------------------
+Text: VPC
+Confidence: 62%
+Position: x=972, y=177
+--------------------
+Text: [3
+Confidence: 25%
+Position: x=1002, y=175
+--------------------
+Text: vpc-0453856060b873ac7
+Confidence: 90%
+Position: x=925, y=199
+--------------------
+Text: Settings
+Confidence: 92%
+Position: x=921, y=229
+--------------------
+Text: EBS
+Confidence: 96%
+Position: x=926, y=259
+--------------------
+Text: encryption
+Confidence: 96%
+Position: x=953, y=260
+--------------------
+Text: Zones
+Confidence: 96%
+Position: x=925, y=289
+--------------------
+Text: EC2
+Confidence: 92%
+Position: x=926, y=319
+--------------------
+Text: Serial
+Confidence: 95%
+Position: x=953, y=319
+--------------------
+Text: Console
+Confidence: 94%
+Position: x=993, y=319
+--------------------
+Text: Default
+Confidence: 96%
+Position: x=926, y=349
+--------------------
+Text: credit
+Confidence: 96%
+Position: x=976, y=349
+--------------------
+Text: specification
+Confidence: 95%
+Position: x=1016, y=349
+--------------------
+Text: Console
+Confidence: 94%
+Position: x=925, y=379
+--------------------
+Text: experiments
+Confidence: 92%
+Position: x=979, y=380
+--------------------
+Text: Launch
+Confidence: 96%
+Position: x=101, y=463
+--------------------
+Text: instance
+Confidence: 96%
+Position: x=182, y=464
+--------------------
+Text: To
+Confidence: 89%
+Position: x=101, y=489
+--------------------
+Text: get
+Confidence: 82%
+Position: x=116, y=489
+--------------------
+Text: started,
+Confidence: 82%
+Position: x=137, y=489
+--------------------
+Text: launch
+Confidence: 91%
+Position: x=182, y=488
+--------------------
+Text: an
+Confidence: 96%
+Position: x=222, y=491
+--------------------
+Text: Amazon
+Confidence: 93%
+Position: x=238, y=489
+--------------------
+Text: EC2
+Confidence: 81%
+Position: x=286, y=489
+--------------------
+Text: instance,
+Confidence: 96%
+Position: x=310, y=489
+--------------------
+Text: which
+Confidence: 96%
+Position: x=362, y=488
+--------------------
+Text: is
+Confidence: 95%
+Position: x=396, y=491
+--------------------
+Text: a
+Confidence: 94%
+Position: x=409, y=479
+--------------------
+Text: virtual
+Confidence: 96%
+Position: x=100, y=504
+--------------------
+Text: server
+Confidence: 94%
+Position: x=138, y=507
+--------------------
+Text: in
+Confidence: 94%
+Position: x=175, y=507
+--------------------
+Text: the
+Confidence: 95%
+Position: x=187, y=504
+--------------------
+Text: cloud,
+Confidence: 92%
+Position: x=209, y=504
+--------------------
+Text: Service
+Confidence: 96%
+Position: x=511, y=463
+--------------------
+Text: health
+Confidence: 96%
+Position: x=577, y=463
+--------------------
+Text: AWS
+Confidence: 91%
+Position: x=589, y=502
+--------------------
+Text: Health
+Confidence: 96%
+Position: x=625, y=502
+--------------------
+Text: Dashboard
+Confidence: 95%
+Position: x=675, y=502
+--------------------
+Text: [4
+Confidence: 59%
+Position: x=756, y=500
+--------------------
+Text: Region
+Confidence: 88%
+Position: x=511, y=562
+--------------------
+Text: A.
+Confidence: 8%
+Position: x=511, y=586
+--------------------
+Text: RS
+Confidence: 19%
+Position: x=533, y=585
+--------------------
+Text: Explore
+Confidence: 96%
+Position: x=922, y=460
+--------------------
+Text: AWS
+Confidence: 96%
+Position: x=989, y=460
+--------------------
+Text: Save
+Confidence: 96%
+Position: x=921, y=523
+--------------------
+Text: Up
+Confidence: 96%
+Position: x=956, y=523
+--------------------
+Text: to
+Confidence: 90%
+Position: x=977, y=524
+--------------------
+Text: 45%
+Confidence: 90%
+Position: x=995, y=523
+--------------------
+Text: on
+Confidence: 96%
+Position: x=1028, y=526
+--------------------
+Text: ML
+Confidence: 96%
+Position: x=1049, y=523
+--------------------
+Text: Inference
+Confidence: 91%
+Position: x=1073, y=523
+--------------------
+Text: EC2
+Confidence: 92%
+Position: x=922, y=549
+--------------------
+Text: Inf1
+Confidence: 60%
+Position: x=950, y=549
+--------------------
+Text: instances
+Confidence: 96%
+Position: x=979, y=550
+--------------------
+Text: provide
+Confidence: 96%
+Position: x=1041, y=549
+--------------------
+Text: high
+Confidence: 96%
+Position: x=1092, y=549
+--------------------
+Text: performance
+Confidence: 96%
+Position: x=1124, y=548
+--------------------
+Text: and
+Confidence: 96%
+Position: x=1209, y=549
+--------------------
+Text: lowest
+Confidence: 83%
+Position: x=921, y=571
+--------------------
+Text: cost
+Confidence: 96%
+Position: x=966, y=572
+--------------------
+Text: ML
+Confidence: 96%
+Position: x=996, y=571
+--------------------
+Text: inference
+Confidence: 96%
+Position: x=1019, y=571
+--------------------
+Text: in
+Confidence: 93%
+Position: x=1081, y=574
+--------------------
+Text: the
+Confidence: 96%
+Position: x=1096, y=571
+--------------------
+Text: cloud.
+Confidence: 95%
+Position: x=1121, y=571
+--------------------
+Text: Learn
+Confidence: 96%
+Position: x=1164, y=571
+--------------------
+Text: more
+Confidence: 92%
+Position: x=1203, y=574
+--------------------
+Text: [
+Confidence: 17%
+Position: x=1239, y=569
+--------------------
