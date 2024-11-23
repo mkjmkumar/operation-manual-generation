@@ -6,7 +6,7 @@ from translations import TRANSLATIONS
 import ffmpeg
 import sys
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageDraw
 import subprocess
 from datetime import datetime
 
@@ -284,6 +284,118 @@ def get_ocr_results():
             return f.read()
     except FileNotFoundError:
         return 'No OCR results available'
+
+def draw_arrow(image, x, y, size=20, color='red'):
+    """Draw a small arrow pointing to the text"""
+    draw = ImageDraw.Draw(image)
+    
+    # Arrow points
+    arrow_x = x - size  # Position arrow to the left of text
+    arrow_y = y
+    
+    # Draw arrow (triangle)
+    draw.polygon([
+        (arrow_x, arrow_y),  # Tip
+        (arrow_x - size//2, arrow_y - size//2),  # Top left
+        (arrow_x - size//2, arrow_y + size//2)   # Bottom left
+    ], fill=color)
+    
+    return image
+
+def process_ocr_output(image):
+    # Create a copy of the image for drawing
+    annotated_image = image.copy()
+    
+    custom_config = r'--oem 3 --psm 6'
+    results = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+    
+    # Group words by their y-coordinate (same line) with more tolerance
+    lines = {}
+    for i in range(len(results['text'])):
+        if not results['text'][i].strip():
+            continue
+            
+        text = results['text'][i]
+        conf = int(results['conf'][i])
+        x = results['left'][i]
+        y = results['top'][i]
+        width = results['width'][i]  # Get the width of the text
+        
+        # Use a tolerance of ±10 pixels for y-coordinate
+        y_key = y // 10 * 10
+        
+        if y_key not in lines:
+            lines[y_key] = []
+        
+        lines[y_key].append({
+            'text': text,
+            'x': x,
+            'width': width,
+            'conf': conf
+        })
+    
+    # Process each line to combine nearby words
+    processed_results = []
+    for y_key in sorted(lines.keys()):
+        line_words = sorted(lines[y_key], key=lambda w: w['x'])
+        
+        current_phrase = []
+        last_x_end = None
+        
+        for word in line_words:
+            # Calculate the gap between this word and the last word
+            if last_x_end is None:
+                current_phrase.append(word)
+            else:
+                gap = word['x'] - last_x_end
+                # If gap is less than 50 pixels, consider words as part of same phrase
+                if gap < 50:
+                    current_phrase.append(word)
+                else:
+                    # Save current phrase and start new one
+                    if current_phrase:
+                        combined_text = ' '.join(w['text'] for w in current_phrase)
+                        avg_conf = sum(w['conf'] for w in current_phrase) // len(current_phrase)
+                        processed_results.append({
+                            'text': combined_text,
+                            'confidence': avg_conf,
+                            'position': f"x={current_phrase[0]['x']}, y={y_key}"
+                        })
+                    current_phrase = [word]
+            
+            last_x_end = word['x'] + word['width']
+        
+        # Don't forget the last phrase
+        if current_phrase:
+            combined_text = ' '.join(w['text'] for w in current_phrase)
+            avg_conf = sum(w['conf'] for w in current_phrase) // len(current_phrase)
+            processed_results.append({
+                'text': combined_text,
+                'confidence': avg_conf,
+                'position': f"x={current_phrase[0]['x']}, y={y_key}"
+            })
+    
+    # Format output
+    output_text = "OCR Detection Results:\n"
+    output_text += "====================\n\n"
+    
+    for item in processed_results:
+        output_text += f"Text: {item['text']}\n"
+        output_text += f"Confidence: {item['confidence']}%\n"
+        output_text += f"Position: {item['position']}\n"
+        output_text += "--------------------\n"
+    
+    # Add arrows for each detected text
+    for item in processed_results:
+        x = int(item['position'].split('x=')[1].split(',')[0])
+        y = int(item['position'].split('y=')[1])
+        annotated_image = draw_arrow(annotated_image, x, y)
+    
+    # Save the annotated image
+    output_path = 'static/annotated_image.png'
+    annotated_image.save(output_path)
+    
+    return output_text, output_path
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=58080, debug=True)
