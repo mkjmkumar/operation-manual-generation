@@ -10,20 +10,35 @@ Backend
 - **Werkzeug**: A comprehensive WSGI web application library.
 
 Image and Video Processing
-- **ffmpeg-python**: A Python wrapper for FFmpeg, used for video processing tasks.
-- **Pillow**: The Python Imaging Library adds image processing capabilities to your Python interpreter.
+- **OpenCV**: A Python wrapper, used for video processing tasks.
+- **ffmpeg-python**: A Python wrapper, used for video processing tasks.
 - **pytesseract**: An OCR tool for Python that recognizes text from images.
 
 Development Tools
 - **python-dotenv**: Loads environment variables from a `.env` file into `os.environ`, helping in managing configurations.
 
-Installation
-This project depends on several system packages:
-- **FFmpeg**: For handling video files.
-- **Tesseract-OCR**: An OCR engine for image recognition tasks.
+Installation and packaged being used so far
 
+For Text Detection: 
+1. Pytesseract (OCR engine) is being used for:
+-   Converting image to text
+-   Getting text coordinates
+-   Detecting text locations
 
-8. **Error Tracking and Monitoring**  
+2. For Web Application:
+-   Flask (Python web framework) is handling:
+-   File uploads
+-   API endpoints
+-   Web routing
+3. For Frontend:
+-   TailwindCSS for styling
+-   Vanilla JavaScript for interactions
+All the image processing (highlighting, boxing, and arrowing) is being done with OpenCV. The main image processing pipeline is:
+4. Pytesseract finds text and coordinates
+5. OpenCV draws rectangles, highlights, and arrows
+6. OpenCV saves the processed image
+
+7. **Error Tracking and Monitoring**  
 We want to ensure our app is running smoothly in production:
 TBD
 
@@ -75,123 +90,40 @@ Below are the core functionalities for my project to create an effective user op
 These packages, along with Next.js’s built-in features like **API routes** and **server-side rendering**, will help us to build an efficient and scalable **SalesConnect** application. Let me know if you'd like more details on any of these!
 
 
-# Prompt
-
-  You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI, Tailwind and Supabase.
-  
-  Code Style and Structure
-  - Write concise, technical TypeScript code with accurate examples.
-  - Use functional and declarative programming patterns; avoid classes.
-  - Prefer iteration and modularization over code duplication.
-  - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
-  - Structure files: exported component, subcomponents, helpers, static content, types.
-  
-  Naming Conventions
-  - Use lowercase with dashes for directories (e.g., components/auth-wizard).
-  - Favor named exports for components.
-  
-  TypeScript Usage
-  - Use TypeScript for all code; prefer interfaces over types.
-  - Avoid enums; use maps instead.
-  - Use functional components with TypeScript interfaces.
-  
-  Syntax and Formatting
-  - Use the "function" keyword for pure functions.
-  - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
-  - Use declarative JSX.
-  
-  UI, Styling and UI components
-  - Use Shadcn UI, Radix, and Tailwind for components and styling.
-  - Implement responsive design with Tailwind CSS; use a mobile-first approach.
-  - Use shadcn/ui components where available.
-  - For layout and styling, use Tailwind CSS utility classes.
-  - Maintain a consistent design language across all pages, including typography, color scheme, and component styles.
-  - Ensure that the UI is responsive and accessible.
-  
-  Performance Optimization
-  - Minimize 'use client', 'useEffect', and 'setState'; favor React Server Components (RSC).
-  - Wrap client components in Suspense with fallback.
-  - Use dynamic loading for non-critical components.
-  - Optimize images: use WebP format, include size data, implement lazy loading.
-  
-  Key Conventions
-  - Use 'nuqs' for URL search parameter state management.
-  - Optimize Web Vitals (LCP, CLS, FID).
-  - Limit 'use client':
-    - Favor server components and Next.js SSR.
-    - Use only for Web API access in small components.
-    - Avoid for data fetching or state management.
-  
-  Follow Next.js docs for Data Fetching, Rendering, and Routing.
-
 # Below is the code structure of the project.
 
 $ tree -L 4 -I 'node_modules|git|ls_volume|ui|public'
 .
-├── components
-│   ├── Company
-│   │   ├── CompanyListing.tsx
-│   │   ├── CreateCompany.tsx
-│   │   └── EditCompany.tsx
-│   ├── Dashboard.tsx
-│   ├── DeltaInsightsDashboard.tsx
-│   ├── HandshakeIcon.tsx
-│   ├── Header.tsx
-│   ├── Login.tsx
-│   └── SideBar.tsx
-├── components.json
-├── Dockerfile
-├── hooks
-│   └── use-toast.ts
+├── app.py
 ├── instructions
-│   └── instructions.md
+│   ├── instructions.md
+│   └── prompt.md
 ├── lib
-│   ├── setCurrentUser.ts
-│   ├── supabaseAdmin.ts
-│   ├── supabaseClient.ts
-│   └── utils.ts
-├── middleware.ts
-├── next.config.js
-├── next-env.d.ts
-├── next-seo.config.js
-├── package.json
-├── package-lock.json
-├── pages
-│   ├── api
-│   │   ├── companies-list.ts
-│   │   ├── company
-│   │   │   └── [companyId].ts
-│   │   ├── company-add.ts
-│   │   ├── company-info.ts
-│   │   ├── company-stages.ts
-│   │   ├── company-statuses.ts
-│   │   ├── countries.ts
-│   │   ├── dashboard-data.ts
-│   │   ├── delta-insights-data.ts
-│   │   ├── export-companies.ts
-│   │   ├── industries.ts
-│   │   ├── login.ts
-│   │   ├── set-current-user.ts
-│   │   ├── states.ts
-│   │   └── users.ts
-│   ├── _app.tsx
-│   ├── companies.tsx
-│   ├── company_add.tsx
-│   ├── company_edit.tsx
-│   ├── dashboard.tsx
-│   ├── delta-insights.tsx
-│   ├── index.tsx
-│   ├── login.tsx
-│   └── middleware.ts
-├── postcss.config.js
-├── README.md
-├── store
-│   └── useStore.ts
-├── styles
-│   └── globals.css
-├── tailwind.config.js
-├── __tests__
-│   └── LeadsList.test.tsx
-└── tsconfig.json
+│   ├── image_processor.py
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── image_processor.cpython-311.pyc
+│   │   ├── __init__.cpython-311.pyc
+│   │   ├── text_highlighter.cpython-311.pyc
+│   │   └── video_processor.cpython-311.pyc
+│   ├── text_highlighter.py
+│   └── video_processor.py
+├── ocr_output.txt
+├── processed
+│   └── 20241123_122746_SampleEC2.jpg
+├── __pycache__
+│   └── translations.cpython-311.pyc
+├── Readme.md
+├── requirements.txt
+├── templates
+│   ├── base.html
+│   ├── index.html
+│   └── login.html
+├── translations.py
+└── uploads
+    ├── rules
+    ├── SampleEC2.jpg
+    └── videos
+
 
 12 directories, 54 files

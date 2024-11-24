@@ -9,6 +9,18 @@ import pytesseract
 from PIL import Image, ImageDraw
 import subprocess
 from datetime import datetime
+from lib.text_highlighter import highlight_text_with_arrow
+import logging
+import cv2
+import math  # Make sure to import math for arrow calculations
+
+# Configure root logger
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Change this in production
@@ -229,53 +241,51 @@ def process_image_with_text_highlight(input_image, output_image, target_word):
 
 @app.route('/process_image', methods=['POST'])
 def process_image():
+    app.logger.debug("Starting process_image route")
     try:
-        data = request.json
-        target_word = data.get('word', '')
+        data = request.get_json()
+        word = data.get('word')
+        timestamp = data.get('timestamp')
         
-        if not target_word:
-            return jsonify({
-                'success': False,
-                'message': 'Please provide a word to highlight'
-            })
-
-        files = os.listdir(UPLOAD_FOLDER)
-        if not files:
-            return jsonify({
-                'success': False,
-                'message': 'No images to process'
-            })
+        # Get the most recently uploaded file from UPLOAD_FOLDER
+        uploaded_files = [f for f in os.listdir(UPLOAD_FOLDER) 
+                         if f.lower().endswith(tuple(ALLOWED_EXTENSIONS))]
+        
+        if not uploaded_files:
+            return jsonify({"success": False, "message": "No uploaded image found"})
             
-        for filename in files:
-            if filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
-                input_path = os.path.join(UPLOAD_FOLDER, filename)
-                output_path = os.path.join(PROCESSED_FOLDER, filename)  # temporary path
-                
-                success, count, message, new_filename = process_image_with_text_highlight(
-                    input_path, output_path, target_word
-                )
-                
-                if success:
-                    return jsonify({
-                        'success': True,
-                        'message': f'Found {count} instances. {message}',
-                        'filename': new_filename
-                    })
-                else:
-                    return jsonify({
-                        'success': False,
-                        'message': message
-                    })
+        # Get most recent file based on creation time
+        latest_file = max(uploaded_files, 
+                         key=lambda x: os.path.getctime(os.path.join(UPLOAD_FOLDER, x)))
         
+        # Get original filename without extension
+        filename_without_ext = os.path.splitext(latest_file)[0]
+        
+        input_path = os.path.join(UPLOAD_FOLDER, latest_file)
+        output_filename = f"{filename_without_ext}_{timestamp}.jpg"
+        output_path = os.path.join(PROCESSED_FOLDER, output_filename)
+        
+        app.logger.debug(f"Processing file: {input_path}")
+        
+        # Call the highlight function with correct paths
+        result = highlight_text_with_arrow(
+            image_path=input_path,
+            search_text=word,
+            output_path=output_path
+        )
+        
+        if result is None:
+            return jsonify({"success": False, "message": "Image processing failed"})
+            
         return jsonify({
-            'success': False,
-            'message': 'No valid images found to process'
+            "success": True, 
+            "message": "Image processed successfully",
+            "filename": output_filename
         })
+        
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'message': f'Processing failed: {str(e)}'
-        })
+        app.logger.error(f"Error in process_image: {str(e)}")
+        return jsonify({"success": False, "message": str(e)})
 
 @app.route('/ocr_results')
 def get_ocr_results():
@@ -396,6 +406,88 @@ def process_ocr_output(image):
     annotated_image.save(output_path)
     
     return output_text, output_path
+
+@app.route('/process-image', methods=['POST'])
+def process_image_with_arrows():
+    """
+    Main route for processing images with text detection and arrow annotation.
+    Accepts: POST request with JSON containing 'word' to search for
+    Returns: JSON response with processing status and filename
+    """
+    try:
+        # Get the search word from the POST request JSON
+        data = request.get_json()
+        search_text = data.get('word', '')
+        
+        # Look for image files in the upload folder
+        files = os.listdir(UPLOAD_FOLDER)
+        if not files:
+            return jsonify({
+                'success': False,
+                'message': 'No images to process'
+            })
+        
+        # Process each valid image file
+        for filename in files:
+            if filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
+                # Construct input and output paths
+                input_path = os.path.join(UPLOAD_FOLDER, filename)
+                
+                # Generate timestamp-based filename for processed image
+                current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+                output_filename = f"{current_time}_{filename}"
+                output_path = os.path.join(PROCESSED_FOLDER, output_filename)
+                
+                # Call text_highlighter.py function to:
+                # 1. Detect text using OCR
+                # 2. Draw green rectangle around matched text
+                # 3. Draw red arrow pointing to text
+                processed_image = highlight_text_with_arrow(
+                    image_path=input_path,
+                    search_text=search_text,
+                    output_path=output_path
+                )
+                
+                if processed_image is not None:
+                    # Convert processed image for OCR text extraction
+                    img = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
+                    pil_img = Image.fromarray(img)
+                    
+                    # Get detailed OCR data including positions
+                    ocr_data = pytesseract.image_to_data(pil_img, output_type=pytesseract.Output.DICT)
+                    
+                    # Write OCR results to text file for validation
+                    with open('ocr_output.txt', 'w', encoding='utf-8') as f:
+                        f.write("OCR Detection Results:\n")
+                        f.write("====================\n\n")
+                        for i, text in enumerate(ocr_data['text']):
+                            if text.strip():
+                                confidence = ocr_data['conf'][i]
+                                f.write(f"Text: {text}\n")
+                                f.write(f"Confidence: {confidence}%\n")
+                                f.write(f"Position: x={ocr_data['left'][i]}, y={ocr_data['top'][i]}\n")
+                                f.write("--------------------\n")
+                    
+                    # Return success response with processed filename
+                    return jsonify({
+                        'success': True,
+                        'message': f'Successfully processed image and found text: {search_text}',
+                        'filename': output_filename
+                    })
+                
+        # Return failure if no valid images were processed
+        return jsonify({
+            'success': False,
+            'message': 'No valid images found to process'
+        })
+        
+    except Exception as e:
+        # Log any errors and return failure response
+        logging.error(f"Error processing image: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=58080, debug=True)

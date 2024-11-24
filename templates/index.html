@@ -253,7 +253,7 @@ document.getElementById('startProcessingButton').addEventListener('click', funct
     const button = this;
     const spinner = button.querySelector('.spinner');
     const ocrResults = document.querySelector('#ocrResults pre');
-    const word = prompt('Enter the word to highlight:');
+    const word = prompt('Enter the word to highlight:', 'EC2');
     
     if (!word) {
         return;

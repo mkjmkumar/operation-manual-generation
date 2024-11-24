@@ -11,6 +11,7 @@ apt-get install -y tesseract-ocr
 
 #Remove the existing packages:
 pip uninstall flask werkzeug
+pip install opencv-python pytesseract
 
 
 #Reinstall with the correct versions:
