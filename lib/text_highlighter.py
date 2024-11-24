@@ -14,6 +14,56 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def add_custom_text(image, text="Copyright Hitachi ISS 2024 - All Rights Reserved", position=None):
+    """
+    Adds custom text to the image at specified position with outline
+    to ensure visibility on any background color
+    """
+    try:
+        height, width = image.shape[:2]
+        if position is None:
+            # Calculate bottom-left position with padding
+            padding_x = 20  # pixels from left edge
+            padding_y = 30  # pixels from bottom edge
+            position = (padding_x, height - padding_y)
+            
+        # Text properties
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.8
+        text_color = (255, 255, 255)  # White text
+        outline_color = (0, 0, 0)      # Black outline
+        thickness = 2
+        outline_thickness = 4          # Thicker outline for better contrast
+        
+        # Draw text outline/border first (black)
+        cv2.putText(
+            image,
+            text,
+            position,
+            font,
+            font_scale,
+            outline_color,
+            outline_thickness,
+            cv2.LINE_AA
+        )
+        
+        # Draw main text over the outline (white)
+        cv2.putText(
+            image,
+            text,
+            position,
+            font,
+            font_scale,
+            text_color,
+            thickness,
+            cv2.LINE_AA
+        )
+        
+        return image
+    except Exception as e:
+        logger.error(f"Error adding custom text: {str(e)}")
+        return image
+
 def highlight_text_with_arrow(image_path, search_text, output_path=None):
     """
     Main function to process images:
@@ -114,6 +164,9 @@ def highlight_text_with_arrow(image_path, search_text, output_path=None):
 
         if not found_text:
             logger.warning(f"Text '{search_text}' not found in image")
+
+        # Add custom text to image
+        image = add_custom_text(image)
 
         # Save the processed image
         if output_path:

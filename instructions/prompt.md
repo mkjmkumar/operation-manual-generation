@@ -1,4 +1,4 @@
-## I am developing an application to generate operational user manuals from media content, using a specific tech stack. The application should extract content from videos and rules files, process images, and organize the information into a structured manual in XLS format. The tech stack includes Flask, psycopg2-binary, MinIO, Werkzeug, ffmpeg-python, Pillow, pytesseract, python-dotenv, FFmpeg, and Tesseract-OCR.
+## I am developing an application to generate operational user manuals from media content, using a specific tech stack. The application should extract content from videos and rules files, process images, and organize the information into a structured manual in XLS format. The tech stack includes Flask, psycopg2-binary, MinIO, Werkzeug, ffmpeg-python, OpenCV, pytesseract, python-dotenv, FFmpeg, and Tesseract-OCR.
 Tasks:
     1. Content Extraction:
         ○ Extract audio, subtitles, and annotations from operation videos.
